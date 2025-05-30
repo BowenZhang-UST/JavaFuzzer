@@ -42,11 +42,11 @@ def defLibMethods
         LibMeth.new("Math.max", "long", ["long", "long"]),
         LibMeth.new("Math.min", "int", ["int", "int"]),
         LibMeth.new("Math.min", "long", ["long", "long"]),
-        LibMeth.new("Math.sqrt", "double", ["double"]),
+        # LibMeth.new("Math.sqrt", "double", ["double"]),
         #        LibMeth.new("Double.doubleToRawLongBits", "long", ["double"]), # problem with raw bits for NaN
-        LibMeth.new("Double.longBitsToDouble", "double", ["long"]),
+        # LibMeth.new("Double.longBitsToDouble", "double", ["long"]),
         #        LibMeth.new("Float.floatToRawIntBits", "int", ["float"]),
-        LibMeth.new("Float.intBitsToFloat", "float", ["int"]),
+        # LibMeth.new("Float.intBitsToFloat", "float", ["int"]),
         LibMeth.new("Integer.reverseBytes", "int", ["int"]),
         LibMeth.new("Long.reverseBytes", "long", ["long"]),
         LibMeth.new("Short.reverseBytes", "short", ["short"])

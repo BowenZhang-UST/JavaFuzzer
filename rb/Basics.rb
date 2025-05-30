@@ -155,10 +155,10 @@ class Var
                        "(" + name + " ? 1 : 0)"
                    when "char" then
                        "(int)" + name
-                   when "float" then
-                       "Float.floatToIntBits(" + name + ")"
-                   when "double" then
-                       "Double.doubleToLongBits(" + name + ")"
+                #    when "float" then
+                #        "Float.floatToIntBits(" + name + ")"
+                #    when "double" then
+                #        "Double.doubleToLongBits(" + name + ")"
                    when "Object" then
                        gen_obj_checkSum() #CHECKC+"("+@name+")"
                    else
