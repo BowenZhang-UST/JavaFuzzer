@@ -230,7 +230,8 @@ class Arr < Var
         return "0" if flag?(Nam::NULL)
         case @type
             when "float", "double" then
-                "Double.doubleToLongBits(" + SUPER + "." + CHECKC + "(" + name + "))"
+                # "Double.doubleToLongBits(" + SUPER + "." + CHECKC + "(" + name + "))"
+                SUPER + "." + CHECKC + "(" + name + ")"
             else
                 SUPER + "." + CHECKC + "(" + name + ")"
         end
