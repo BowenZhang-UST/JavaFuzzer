@@ -169,14 +169,14 @@ class JavaMethod
         glob = (@mainTestFlag ? @methClass.genGlobCheckSums() : '')
 #main method:
         if @mainFlag            
-            res += ln("try {")
-            shift(1)
+            # res += ln("try {")
+            # shift(1)
             res +=  ln(@methClass.name + " _instance = new " +  @methClass.name + "();")
-            res +=  ln("for (int i = 0; i < " + $conf.mainTest_calls_num.to_s + "; i++ ) {")
-            shift(1)
+            # res +=  ln("for (int i = 0; i < " + $conf.mainTest_calls_num.to_s + "; i++ ) {")
+            # shift(1)
             res += ln("_instance." + @methClass.methMainTest.name + "(" + @args[0].name + ");")
-            shift(-1)
-            res += ln("}")
+            # shift(-1)
+            # res += ln("}")
             if ($conf.time_sleep_complete_tier1 > 0)
                 res += ln("try {") + ln("Thread.sleep(" + $conf.time_sleep_complete_tier1.to_s + ");") + ln(" } catch (InterruptedException ie) {") 
                 shift(1)
@@ -192,12 +192,12 @@ class JavaMethod
                 shift(-1)
                 res = res + ln("}")
             end
-            shift(-1)
-            res += ln(" } catch (Exception ex) {")
-            shift(1)
-            res += ln("FuzzerUtils.out.println(ex.getClass().getCanonicalName());")
-            shift(-1)
-            res += ln(" }")
+            # shift(-1)
+            # res += ln(" } catch (Exception ex) {")
+            # shift(1)
+            # res += ln("FuzzerUtils.out.println(ex.getClass().getCanonicalName());")
+            # shift(-1)
+            # res += ln(" }")
 
         end
       

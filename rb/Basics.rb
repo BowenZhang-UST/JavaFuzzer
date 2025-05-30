@@ -783,15 +783,16 @@ def getVar(reuseProb, type, destFlag, className=nil, notnull=false, metlist=nil,
         count = 0
         (@varList + @arrList + @objList.values().flatten + $globalContext.classList).each do |var|
             next if var.is_a?(JavaClass) and var.name=="Test"
-            names += var.name + " "
-            vals += ' + "," + ' + var.gen_checkSum()
-            if (count += 1) % 3 == 0
-                res += ln('FuzzerUtils.out.println("' + names + '= "' + vals[6..-1] + ');')
-                names = vals = ""
-                count = 0
-            end
+            # names += var.name + " "
+            # vals += ' + "," + ' + var.gen_checkSum()
+            res += ln('FuzzerUtils.print(' + var.gen_checkSum() + ');')
+            # if (count += 1) % 3 == 0
+            #     res += ln('FuzzerUtils.out.println("' + names + '= "' + vals[6..-1] + ');')
+            #     names = vals = ""
+            #     count = 0
+            # end
         end
-        res += ln('FuzzerUtils.out.println("' + names + '= "' + vals[6..-1] + ');') if count > 0
+        # res += ln('FuzzerUtils.out.println("' + names + '= "' + vals[6..-1] + ');') if count > 0
         return res
     end
 
@@ -1054,10 +1055,12 @@ class JavaClass
         res = ""
         @methList.each do |meth|
             next if meth.mainTestFlag
-            res += ln('FuzzerUtils.out.println("' + meth.resFieldName + ': " + ' + meth.resFieldName + ');')
+            # res += ln('FuzzerUtils.out.println("' + meth.resFieldName + ': " + ' + meth.resFieldName + ');')
+            res += ln('FuzzerUtils.print(' + meth.resFieldName + ');')
         end
-        res += ln('FuzzerUtils.out.println("' + STAT_INT_FLD_NAME + ': " + ' +
-                      STAT_INT_FLD_NAME + ');') if @auxMemFlags[INL_METH_FLAG]
+        # res += ln('FuzzerUtils.out.println("' + STAT_INT_FLD_NAME + ': " + ' +
+                    #   STAT_INT_FLD_NAME + ');') if @auxMemFlags[INL_METH_FLAG]
+        res += ln('FuzzerUtils.print(' + STAT_INT_FLD_NAME + ');') if @auxMemFlags[INL_METH_FLAG]
         res
     end
 
