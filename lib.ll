@@ -170,9 +170,57 @@ entry:
     ret i64 %result
 }
 
+
+define float @java.lang.Math.abs.2(float) {
+entry:
+    %is_negative = fcmp olt float %0, 0.0
+    %neg = fsub float 0.0, %0
+    %result = select i1 %is_negative, float %neg, float %0
+    ret float %result
+}
+
+define float @java.lang.Math.abs.2(float) {
+entry:
+    %is_negative = fcmp olt float %0, 0.0
+    %neg = fsub float 0.0, %0
+    %result = select i1 %is_negative, float %neg, float %0
+    ret float %result
+}
+
+define double @java.lang.Math.abs.3(double) {
+entry:
+    %is_negative = fcmp olt double %0, 0.0
+    %neg = fsub double 0.0, %0
+    %result = select i1 %is_negative, double %neg, double %0
+    ret double %result
+}
+
+
 define i32 @java.lang.Math.max(i32 %a, i32 %b) {
 entry:
     %is_a_greater = icmp sgt i32 %a, %b
     %result = select i1 %is_a_greater, i32 %a, i32 %b
     ret i32 %result
 }
+
+define i64 @java.lang.Math.max.1(i64 %a, i64 %b) {
+entry:
+    %is_a_greater = icmp sgt i64 %a, %b
+    %result = select i1 %is_a_greater, i64 %a, i64 %b
+    ret i64 %result
+}
+
+define i32 @java.lang.Math.min(i32 %a, i32 %b) {
+entry:
+    %is_a_greater = icmp sgt i32 %a, %b
+    %result = select i1 %is_a_greater, i32 %b, i32 %a
+    ret i32 %result
+}
+
+define i64 @java.lang.Math.min.1(i64 %a, i64 %b) {
+entry:
+    %is_a_greater = icmp sgt i64 %a, %b
+    %result = select i1 %is_a_greater, i64 %b, i64 %a
+    ret i64 %result
+}
+

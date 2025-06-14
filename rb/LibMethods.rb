@@ -47,9 +47,9 @@ def defLibMethods
         # LibMeth.new("Double.longBitsToDouble", "double", ["long"]),
         #        LibMeth.new("Float.floatToRawIntBits", "int", ["float"]),
         # LibMeth.new("Float.intBitsToFloat", "float", ["int"]),
-        LibMeth.new("Integer.reverseBytes", "int", ["int"]),
-        LibMeth.new("Long.reverseBytes", "long", ["long"]),
-        LibMeth.new("Short.reverseBytes", "short", ["short"])
+        # LibMeth.new("Integer.reverseBytes", "int", ["int"]),
+        # LibMeth.new("Long.reverseBytes", "long", ["long"]),
+        # LibMeth.new("Short.reverseBytes", "short", ["short"])
     ]
 end
 
