@@ -60,24 +60,11 @@ entry:
     ret void
 }
 
-; Java fuzzer related
-%struct.java.lang.String = type opaque
-declare void @"Test.<clinit>"()
-declare void @"FuzzerUtils.<clinit>"()
-declare void @Test.main([0 x %struct.java.lang.String*]* )
-
+;main func
 define i32 @main() {
 entry:
     call void @java_fuzzer()
     ret i32 0
-}
-
-define void @java_fuzzer() {
-entry:
-    call void @"Test.<clinit>"()
-    call void @"FuzzerUtils.<clinit>"()
-    call void @Test.main([0 x %struct.java.lang.String*]* null)
-    ret void
 }
 
 define void @test() {
@@ -98,6 +85,23 @@ entry:
     call void @FuzzerUtils.print.2(i16 %int2int)
     ret void
 }
+
+; Java fuzzer related
+%struct.java.lang.String = type opaque
+declare void @"Test.<clinit>"()
+declare void @"FuzzerUtils.<clinit>"()
+declare void @Test.main([0 x %struct.java.lang.String*]* )
+
+
+define void @java_fuzzer() {
+entry:
+    call void @"Test.<clinit>"()
+    call void @"FuzzerUtils.<clinit>"()
+    call void @Test.main([0 x %struct.java.lang.String*]* null)
+    ret void
+}
+
+
 
 ; OO-related
 
@@ -170,14 +174,6 @@ entry:
     ret i64 %result
 }
 
-
-define float @java.lang.Math.abs.2(float) {
-entry:
-    %is_negative = fcmp olt float %0, 0.0
-    %neg = fsub float 0.0, %0
-    %result = select i1 %is_negative, float %neg, float %0
-    ret float %result
-}
 
 define float @java.lang.Math.abs.2(float) {
 entry:
