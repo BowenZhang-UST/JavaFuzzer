@@ -55,8 +55,9 @@ entry:
 
 define void @FuzzerUtils.print.6(float %value) {
 entry:
-    %fmt = getelementptr inbounds [4 x i8], [4 x i8]* @.str_float, i32 0, i32 0
-    call i32 (i8*, ...) @printf(i8* %fmt, float %value)
+    %ext = fpext float %value to double
+    %fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str_double, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, double %ext)
     ret void
 }
 
