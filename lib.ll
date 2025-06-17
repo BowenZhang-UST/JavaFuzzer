@@ -68,7 +68,21 @@ entry:
     ret i32 0
 }
 
-define void @test() {
+define void @test_array() {
+entry:
+    %array2d = call i32* @jellyfish.newarray.2d(i32 2, i32 4)
+    %size_2d = call i32 @jellyfish.length(i32* %array2d)
+    call void @FuzzerUtils.print.1(i32 %size_2d)
+
+    %access2d = call i32* @jellyfish.arrayaccess(i32* %array2d, i32 1)
+    %cast = bitcast i32* %access2d to i32**
+    %subarray1 = load i32*, i32** %cast
+    %size_subarray = call i32 @jellyfish.length(i32* %subarray1)
+    call void @FuzzerUtils.print.1(i32 %size_subarray)
+    ret void
+}
+
+define void @test_print() {
 entry:
     call void @FuzzerUtils.print(i64 123456789)
     call void @FuzzerUtils.print.1(i32 42)
@@ -78,12 +92,6 @@ entry:
     call void @FuzzerUtils.print.5(double 2.71828)
     call void @FuzzerUtils.print.6(float 0x400928F5C0000000)
     call void @"java.lang.Object.<init>"(%struct.java.lang.Object* null)
-    %array = call i64 @jellyfish.newarray.1d(i32 4, i32 10)
-    %arrayptr = inttoptr i64 %array to i32*
-    %size = call i32 @jellyfish.length(i32* %arrayptr)
-    call void @FuzzerUtils.print.1(i32 %size)
-    %int2int = trunc i32 -17344 to i16
-    call void @FuzzerUtils.print.2(i16 %int2int)
     ret void
 }
 
@@ -93,7 +101,6 @@ declare void @"Test.<clinit>"()
 declare void @"FuzzerUtils.<clinit>"()
 declare void @Test.main([0 x %struct.java.lang.String*]* )
 
-
 define void @java_fuzzer() {
 entry:
     call void @"Test.<clinit>"()
@@ -101,8 +108,6 @@ entry:
     call void @Test.main([0 x %struct.java.lang.String*]* null)
     ret void
 }
-
-
 
 ; OO-related
 
@@ -117,45 +122,67 @@ entry:
 ; array related
 define i32 @jellyfish.length(i32*) {
 entry:
-    %new_ptr = getelementptr i32, i32* %0, i32 -1
-    %value = load i32, i32* %new_ptr
+    %ptr = getelementptr i32, i32* %0, i32 0
+    %value = load i32, i32* %ptr
     ret i32 %value
 }
 
-define i64 @jellyfish.newarray.1d(i32, i32) {
+define i32* @jellyfish.arrayaccess(i32*, i32) {
 entry:
-    %size = mul i32 %0, %1
-    %ptr = call i64 @alloc_and_initsize(i32 %size)
-    ret i64 %ptr
+    %index = add i32 %1, 1
+    %arrayptr = bitcast i32* %0 to [0 x i32*]*
+    %gep = getelementptr [0 x i32*], [0 x i32*]* %arrayptr, i32 0, i32 %index
+    %cast = bitcast i32** %gep to i32*
+    ret i32* %cast
 }
 
-define i64 @jellyfish.newarray.2d(i32, i32, i32) {
+define i32* @jellyfish.newarray.2d(i32, i32) {
 entry:
-    %size = mul i32 %0, %1
-    %size1 = mul i32 %size, %2
-    %ptr = call i64 @alloc_and_initsize(i32 %size1)
-    ret i64 %ptr
+    %ptr = call i32* @alloc_and_initsize(i32 %0)
+    %cast_ptr = bitcast i32* %ptr to i32**
+    %index = alloca i32
+    store i32 0, i32* %index
+    br label %loop
+loop:
+    %current_index = load i32, i32* %index 
+    %cmp = icmp slt i32 %current_index, %0 
+    br i1 %cmp, label %body, label %end 
+
+body:
+    %subarray_ptr = call i32* @jellyfish.newarray.1d(i32 %1)
+    %next_index = add i32 %current_index, 1
+    %gep = getelementptr i32*, i32** %cast_ptr, i32 %next_index
+    store i32* %subarray_ptr, i32** %gep
+    store i32 %next_index, i32* %index     
+    br label %loop                      
+
+end:
+    ret i32* %ptr                            
+}
+
+define i32* @jellyfish.newarray.1d(i32) {
+entry:
+    %ptr = call i32* @alloc_and_initsize(i32 %0)
+    ret i32* %ptr
 }
 
 declare noalias i8* @malloc(i32)
-define i64 @alloc_and_initsize(i32 %N) {
+define i32* @alloc_and_initsize(i32 %N) {
 entry:
-    %size = add i32 %N, 4
+    %N8 = mul i32 %N, 8
+    %size = add i32 %N8, 8
     %ptr = call i8* @malloc(i32 %size)
 
     %null_check = icmp eq i8* %ptr, null
     br i1 %null_check, label %malloc_failed, label %malloc_success
 
 malloc_failed:
-    ret i64 0
+    ret i32* null
 
 malloc_success:
     %int_ptr = bitcast i8* %ptr to i32*
     store i32 %N, i32* %int_ptr
-
-    %result_ptr = getelementptr i32, i32* %int_ptr, i32 1
-    %bitcast = ptrtoint i32* %result_ptr to i64
-    ret i64 %bitcast
+    ret i32* %int_ptr
 }
 
 ; Math related
