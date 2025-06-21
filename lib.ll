@@ -48,16 +48,17 @@ entry:
 
 define void @FuzzerUtils.print.5(double %value) {
 entry:
-    %fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str_double, i32 0, i32 0
-    call i32 (i8*, ...) @printf(i8* %fmt, double %value)
+    %cast = bitcast double %value to i64
+    %fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str_i64, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, i64 %cast)
     ret void
 }
 
 define void @FuzzerUtils.print.6(float %value) {
 entry:
-    %ext = fpext float %value to double
-    %fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str_double, i32 0, i32 0
-    call i32 (i8*, ...) @printf(i8* %fmt, double %ext)
+    %cast = bitcast float %value to i32
+    %fmt = getelementptr inbounds [4 x i8], [4 x i8]* @.str_i32, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt, i32 %cast)
     ret void
 }
 
