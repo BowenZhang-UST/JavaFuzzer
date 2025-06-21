@@ -499,12 +499,12 @@ public class FuzzerUtils {
     }
 
     public static void print(float x) {
-        System.out.println(String.format("%.6f", x));
+        System.out.println(Float.floatToIntBits(x));
         return;
     }
 
     public static void print(double x) {
-        System.out.println(String.format("%.6f", x));
+        System.out.println(Double.doubleToLongBits(x));
         return;
     }
 
