@@ -8,6 +8,7 @@
 @.str_char = private unnamed_addr constant [4 x i8] c"%c\0A\00", align 1
 @.str_float = private unnamed_addr constant [4 x i8] c"%f\0A\00", align 1
 @.str_double = private unnamed_addr constant [5 x i8] c"%lf\0A\00", align 1
+@.str_nan = private unnamed_addr constant [5 x i8] c"nan\0A\00", align 1
 
 declare i32 @printf(i8*, ...)
 
@@ -46,16 +47,42 @@ entry:
     ret void
 }
 
+define i1 @llvm.isnan.f64(double %x) {
+entry:
+    %is_nan = fcmp une double %x, %x
+    ret i1 %is_nan                 
+}
+
 define void @FuzzerUtils.print.5(double %value) {
 entry:
+    %isnan = call i1 @llvm.isnan.f64(double %value)
+    br i1 %isnan, label %is_nan, label %not_nan
+is_nan:
+    %fmt_nan = getelementptr inbounds [5 x i8], [5 x i8]* @.str_nan, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt_nan)
+    ret void
+not_nan:
     %cast = bitcast double %value to i64
     %fmt = getelementptr inbounds [5 x i8], [5 x i8]* @.str_i64, i32 0, i32 0
     call i32 (i8*, ...) @printf(i8* %fmt, i64 %cast)
     ret void
 }
 
+define i1 @llvm.isnan.f32(float %x) {
+entry:
+    %is_nan = fcmp une float %x, %x
+    ret i1 %is_nan                 
+}
+
 define void @FuzzerUtils.print.6(float %value) {
 entry:
+    %isnan = call i1 @llvm.isnan.f32(float %value)
+    br i1 %isnan, label %is_nan, label %not_nan
+is_nan:
+    %fmt_nan = getelementptr inbounds [5 x i8], [5 x i8]* @.str_nan, i32 0, i32 0
+    call i32 (i8*, ...) @printf(i8* %fmt_nan)
+    ret void
+not_nan:
     %cast = bitcast float %value to i32
     %fmt = getelementptr inbounds [4 x i8], [4 x i8]* @.str_i32, i32 0, i32 0
     call i32 (i8*, ...) @printf(i8* %fmt, i32 %cast)

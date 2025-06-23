@@ -15,7 +15,12 @@ for i in {1..1000}
 do
     diff -q $BC_DIR/test${i}/out.txt $ORACLE_DIR/passes/test${i}/rt_out > /dev/null
     if [ $? -ne 0 ]; then
-        echo $BC_DIR/test${i}/out.txt $ORACLE_DIR/passes/test${i}/rt_out
+        echo ">>>"
+        echo $ORACLE_DIR/passes/test${i}/Test.java
+        echo $BC_DIR/test${i}/out.txt
+        echo $ORACLE_DIR/passes/test${i}/rt_out
+        diff $BC_DIR/test${i}/out.txt $ORACLE_DIR/passes/test${i}/rt_out
+        echo "\n"
         COUNT=$((COUNT + 1))
     fi
 done
