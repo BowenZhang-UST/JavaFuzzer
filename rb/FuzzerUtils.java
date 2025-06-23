@@ -499,12 +499,21 @@ public class FuzzerUtils {
     }
 
     public static void print(float x) {
-        System.out.println(Float.floatToIntBits(x));
+        if(Float.isNaN(x)) {
+            System.out.println("nan");
+        } else {
+            System.out.println(Float.floatToIntBits(x));
+        }
+
         return;
     }
 
     public static void print(double x) {
-        System.out.println(Double.doubleToLongBits(x));
+        if(Double.isNaN(x)) {
+            System.out.println("nan");
+        } else {
+            System.out.println(Double.doubleToLongBits(x));
+        }
         return;
     }
 
